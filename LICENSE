@@ -1,0 +1,56 @@
+Flowbot Free License
+Copyright (c) 2026 [YOUR NAME OR COMPANY]. All rights reserved.
+
+1. Grant of use
+You may download, install, and use Flowbot (the "Software") free of
+charge, for personal or commercial purposes, on servers you or your
+organization control.
+
+2. Configuration files
+You may modify the configuration files distributed with the Software
+(such as docker-compose.yml, .env.example, and the files in the examples
+folder) as needed to install and operate it.
+
+3. Restrictions
+You may not:
+  a) reverse engineer, decompile, or disassemble the Software, except
+     where applicable law expressly permits this;
+  b) modify the Software or create derivative works from it, other than
+     the configuration files described in section 2;
+  c) redistribute, sell, rent, or sublicense the Software, or publish
+     copies of its container images;
+  d) offer the Software to third parties as a hosted or managed service;
+  e) remove or alter any copyright or license notices.
+
+4. Ownership
+The Software is licensed, not sold. The author keeps all rights, title,
+and interest in the Software.
+
+5. Your data
+The Software runs on your infrastructure. The author does not collect
+your documents, conversations, or API keys. You are responsible for
+your data, your API keys, and your use of any third-party AI providers.
+
+6. Third-party components
+The Software includes open source components that are licensed under
+their own terms, listed in THIRD_PARTY_NOTICES.md.
+
+7. No warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+8. Limitation of liability
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM THE USE OF, OR INABILITY TO USE, THE SOFTWARE.
+
+9. Termination
+This license ends automatically if you break its terms. You must then
+stop using and delete the Software.
+
+10. Changes
+Future versions may be released under different terms. Each version is
+governed by the license included with it.
+
+11. Governing law
+This license is governed by the laws of [YOUR COUNTRY OR STATE].

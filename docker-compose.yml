@@ -1,0 +1,78 @@
+# Flowbot - docker-compose.yml
+# Settings live in .env. After changing .env, run: docker compose up -d
+# (a plain "docker compose restart" does NOT load new settings)
+
+name: flowbot
+
+x-flowbot: &flowbot
+  image: ghcr.io/YOUR_GITHUB_NAME/flowbot:${FLOWBOT_VERSION:-v1.0.0}
+  restart: unless-stopped
+  env_file: .env
+  environment:
+    DATABASE_URL: postgresql://${DB_USER:-flowbot}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-flowbot}
+  volumes:
+    - files:/data/files
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  app:
+    <<: *flowbot
+    ports:
+      - "${FLOWBOT_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "/opt/flowbot/run.bin", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  worker:
+    <<: *flowbot
+    command: ["worker"]
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-flowbot}
+      POSTGRES_USER: ${DB_USER:-flowbot}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-flowbot} -d ${DB_NAME:-flowbot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # The database is not exposed outside Docker on purpose.
+
+  # ── Optional: local AI models (start with --profile local-ai) ──────────
+  ollama:
+    image: ollama/ollama
+    restart: unless-stopped
+    profiles: ["local-ai"]
+    volumes:
+      - ollama:/root/.ollama
+    # For an NVIDIA GPU, install the NVIDIA Container Toolkit and uncomment:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  ollama-init:
+    image: ollama/ollama
+    profiles: ["local-ai"]
+    environment:
+      OLLAMA_HOST: ollama:11434
+    entrypoint: ["sh", "-c", "sleep 5 && ollama pull ${LOCAL_EMBEDDING_MODEL:-bge-m3} && ollama pull ${LOCAL_CHAT_MODEL:-qwen2.5:7b}"]
+    depends_on: [ollama]
+    restart: "no"
+
+volumes:
+  pgdata:
+  files:
+  ollama:
