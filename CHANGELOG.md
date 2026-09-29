@@ -9,14 +9,15 @@ Before upgrading, read the **Upgrade notes** for every version between yours and
 First public release.
 
 ### Added
-- Visual flow builder with message nodes and buttons
-- Keyword rules with exact, contains, and typo-tolerant matching
-- Knowledge base: PDF, DOCX, TXT, Markdown, and URLs
-- AI providers: OpenAI, Google Gemini, Anthropic, Azure OpenAI, Mistral, OpenAI-compatible endpoints
-- Local models through Ollama
-- Human handoff by email and webhooks
-- Website widget with one-line embed
-- Analytics: messages, resolution rate, tier breakdown, unanswered questions
+- Flow builder with menus, buttons and example phrasings
+- Three chatbot modes: flows only, documents only, and hybrid
+- Local routing model, run in-process from a GGUF file or through an OpenAI-compatible server such as Ollama
+- Knowledge base from PDF, TXT, Markdown and HTML files, web pages and pasted text, answered with OpenAI
+- Suggested flow nodes for questions the knowledge base keeps answering
+- Handoff queue for conversations the bot can't answer
+- Projects with team members, API keys, and usage limits per project and chatbot
+- Usage statistics by answer tier
+- Single SQLite database with no separate database server
 
 ### Upgrade notes
 - None (first release).

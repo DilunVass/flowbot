@@ -1,0 +1,38 @@
+# Attaches flowbot-install.zip to every published release. The zip holds a
+# flowbot/ folder with the install files, pinned to the release's version, so
+#   curl -fsSLO .../releases/latest/download/flowbot-install.zip
+# always gets files that match the newest image.
+
+name: install-bundle
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write        # upload the release asset
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Build flowbot-install.zip
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          mkdir -p dist/flowbot
+          cp -R docker-compose.yml .env.example models examples LICENSE THIRD_PARTY_NOTICES.md dist/flowbot/
+          sed -i "s/FLOWBOT_VERSION:-v[0-9][^}]*/FLOWBOT_VERSION:-$VERSION/g" dist/flowbot/docker-compose.yml
+          sed -i "s/^FLOWBOT_VERSION=.*/FLOWBOT_VERSION=$VERSION/" dist/flowbot/.env.example
+          grep -q "FLOWBOT_VERSION:-$VERSION}" dist/flowbot/docker-compose.yml
+          grep -q "^FLOWBOT_VERSION=$VERSION$" dist/flowbot/.env.example
+          (cd dist && zip -r ../flowbot-install.zip flowbot)
+          unzip -l flowbot-install.zip
+
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" flowbot-install.zip --clobber

@@ -26,10 +26,11 @@
    docker compose up -d
    ```
 
-Database changes apply automatically on startup. Check with:
+Database changes apply automatically on startup. Check that it came back up:
 
 ```bash
-docker compose exec app flowbot check-config
+docker compose ps
+docker compose logs --tail=50 flowbot
 ```
 
 ## Rolling back

@@ -1,12 +1,35 @@
 # Third-party notices
 
-Flowbot includes open source software. Each component is licensed under its own terms, reproduced in full in the notice files attached to every release.
+Flowbot includes open source software. Each component is licensed under its own terms.
 
-For each version, see the release assets:
+## Main components
 
-- `THIRD_PARTY_NOTICES.txt`: backend (Python) components and their licenses
-- `THIRD_PARTY_NOTICES_JS.txt`: dashboard and widget (JavaScript) components and their licenses
+| Component | License |
+|---|---|
+| Python | PSF License |
+| FastAPI, Starlette | MIT |
+| Uvicorn | BSD-3-Clause |
+| Pydantic, pydantic-settings | MIT |
+| llama.cpp, llama-cpp-python | MIT |
+| NumPy | BSD-3-Clause |
+| httpx | BSD-3-Clause |
+| pypdf | BSD-3-Clause |
+| cryptography | Apache-2.0 or BSD-3-Clause |
+| bcrypt | Apache-2.0 |
+| PyJWT | MIT |
+| SlowAPI | MIT |
+| python-dotenv | BSD-3-Clause |
+| python-multipart | Apache-2.0 |
+| email-validator | Unlicense |
+| Vue, Vue Router, Pinia | MIT |
+| crypto-js | MIT |
 
-The same files are included inside the container image at `/opt/flowbot/licenses/`.
+The full license text of every Python component ships inside the container image, in each package's `*.dist-info` folder under `/opt/venv/lib/python3.12/site-packages/`.
 
-Container images that run alongside Flowbot and are pulled from their own publishers (for example `pgvector/pgvector` and `ollama/ollama`) are not part of Flowbot and are governed by their own licenses.
+## Not part of Flowbot
+
+The following are downloaded or run separately, and are covered by their own licenses:
+
+- The model file you put in `models/` (Qwen3 is Apache 2.0)
+- Ollama, if you use it
+- The `python:3.12-slim` base image and its Debian packages

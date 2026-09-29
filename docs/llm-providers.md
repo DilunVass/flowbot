@@ -1,59 +1,63 @@
-# AI providers
+# AI models
 
-Flowbot doesn't include an AI service. You connect your own, and pay the provider directly for what you use. Rules-only chatbots need no provider at all.
+Flowbot uses two kinds of model. Flows-only chatbots need just the first, and it runs on your own server.
 
-## Two kinds of model
+- **Routing model** (local): reads a typed question and picks the flow node that answers it. It never writes answers itself.
+- **Knowledge model** (OpenAI, optional): writes answers from your documents when no flow node fits.
 
-- **Chat model**: writes answers from your documents.
-- **Embedding model**: turns documents and questions into numbers so Flowbot can find relevant passages.
+## Routing model
 
-They can come from different providers, for example Google embeddings with Anthropic for chat.
+### In-process (default)
 
-## Adding a key
-
-**In the dashboard (recommended):** go to **Settings → AI providers → Add provider**, choose the provider, paste the key, and click **Test**. Keys are encrypted before being saved and are only shown masked afterwards.
-
-**In `.env`:** set the matching `FLOWBOT_*_API_KEY` value and run `docker compose up -d`. Keys set this way show as "Managed by server configuration" in the dashboard.
-
-## What leaves your server
-
-- To the **embedding** provider: document text when documents are processed, and each visitor question that reaches the document tier.
-- To the **chat** provider: the visitor question and the matching document passages.
-
-Nothing is sent if the rules answer the question. Nothing leaves your server at all if you use local models.
-
-## Local models with Ollama
+Flowbot runs a GGUF model file itself, so nothing else needs to be installed. Put the file at `models/model.gguf` (see [models/README.md](../models/README.md)) and keep:
 
 ```bash
-docker compose --profile local-ai up -d
+LLM_MODE=in_process
+LLM_MODEL_PATH=llm_models/model.gguf
 ```
 
-In `.env`:
+The model loads on the first message after each start, which takes a few seconds. It answers one message at a time. If you get enough traffic that replies start queueing, switch to Ollama.
+
+### Ollama
+
+[Ollama](https://ollama.com) handles several messages at once, and it can use a GPU. With Ollama installed on the same server:
 
 ```bash
-FLOWBOT_LOCAL_BASE_URL=http://ollama:11434/v1
-FLOWBOT_EMBEDDING_MODEL=local/bge-m3
-FLOWBOT_CHAT_MODEL=local/qwen2.5:7b
+ollama pull qwen3:0.6b
 ```
 
-Hardware guide:
+Ollama only listens on `127.0.0.1` by default, which the Flowbot container can't reach. Set `OLLAMA_HOST=0.0.0.0` for the Ollama service (see Ollama's FAQ), and firewall port 11434 from the internet. Then set in `.env`:
 
-| Use | Needs |
-|---|---|
-| Local embeddings only | Normal CPU, 8 GB+ RAM |
-| Local chat model (7–8B) | NVIDIA GPU with ~16 GB memory for responsive answers. On CPU, answers can take 10+ seconds |
+```bash
+LLM_MODE=http
+LLM_BASE_URL=http://host.docker.internal:11434/v1
+LLM_MODEL=qwen3:0.6b
+```
 
-Check the license of any model you download; most recommended ones allow commercial use, but not all do.
+and run `docker compose up -d`. Any OpenAI-compatible server works the same way, for example `llama-server` from llama.cpp.
 
-## Changing the embedding model
+### Choosing a model
 
-Embeddings from different models can't be mixed. When you change the embedding model, Flowbot re-processes every document in the background and keeps answering with the old model until it's done. It shows the number of documents first. With a paid provider, this costs tokens.
+Qwen3 0.6B is small and quick on a CPU, and it's what Flowbot is tested with. A larger model routes unusual phrasings more accurately, but it replies more slowly and uses more memory. Check the license of any model you use; Qwen3 is Apache 2.0.
 
-## Common errors
+## Knowledge tier (OpenAI)
 
-| Message | Meaning |
-|---|---|
-| "Key rejected" | Key is wrong, revoked, or for another provider |
-| "No remaining credit" | Add credit or a payment method with the provider |
-| "Provider is rate limiting" | Too many requests; answers are slower until it clears |
-| "Can't reach provider" | Server has no outbound internet access or a firewall blocks it |
+The knowledge tier is off by default because it's the only tier that costs money per message. To turn it on, add an [OpenAI API key](https://platform.openai.com/api-keys) to `.env`:
+
+```bash
+RAG_ENABLED=true
+OPENAI_API_KEY=sk-...
+```
+
+and run `docker compose up -d`. Then set a chatbot's mode to **hybrid** or **documents only**, and add documents in its knowledge base.
+
+### What leaves your server
+
+- When a document is processed, its text goes to OpenAI's embedding model.
+- When a question reaches the knowledge tier, the question goes to the embedding model. The question and the best-matching passages then go to the chat model.
+
+Nothing is sent when a menu, rule or flow node answers the question.
+
+### Tuning
+
+`RAG_SCORE_THRESHOLD` controls how closely a passage must match before Flowbot answers from it. If the bot hands off questions your documents do cover, lower it slightly (for example to `0.7`). If it gives weak answers, raise it. To see match scores for real questions, use **Test retrieval** in the chatbot's knowledge base.

@@ -1,9 +1,9 @@
 # Caddy gets and renews HTTPS certificates automatically.
 # 1. Point your domain's DNS A record to this server.
 # 2. Replace chat.example.com below.
-# 3. Set FLOWBOT_PUBLIC_URL=https://chat.example.com in .env
+# 3. Set PUBLIC_BASE_URL and FRONTEND_BASE_URL to https://chat.example.com in .env
 
 chat.example.com {
     encode gzip
-    reverse_proxy localhost:8080
+    reverse_proxy localhost:8000
 }
