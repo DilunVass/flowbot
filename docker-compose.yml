@@ -8,11 +8,11 @@ name: flowbot
 
 services:
   flowbot:
-    image: ghcr.io/dilunvass/flowbot:${FLOWBOT_VERSION:-v1.0.0}
+    image: ghcr.io/dilunvass/flowbot:${FLOWBOT_VERSION:-v1.0.1}
     restart: unless-stopped
     env_file: .env
     environment:
-      APP_VERSION: ${FLOWBOT_VERSION:-v1.0.0}
+      APP_VERSION: ${FLOWBOT_VERSION:-v1.0.1}
     ports:
       - "${FLOWBOT_PORT:-8000}:8000"
     volumes:
