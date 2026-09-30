@@ -28,7 +28,7 @@ Each chatbot picks a mode: **flows only** (free and fully scripted), **documents
 
 ## Requirements
 
-- Linux server with Docker 24+ and Docker Compose v2 (x86-64/amd64)
+- Docker 24+ and Docker Compose v2 on an x86-64/amd64 machine: a Linux server for live use, or macOS or Windows with Docker Desktop to try it out
 - 2 CPU cores and 2 GB RAM
 - 5 GB free disk space
 
@@ -50,13 +50,13 @@ docker compose up -d
 
 Open `http://your-server:8000` and sign in with the owner account.
 
-Full instructions: [docs/install.md](docs/install.md)
+These commands are for Linux and macOS. Full instructions, including Windows: [docs/install.md](docs/install.md)
 
 ## Documentation
 
 | Guide | What it covers |
 |---|---|
-| [Install](docs/install.md) | Step-by-step installation |
+| [Install](docs/install.md) | Step-by-step installation on Linux, macOS or Windows |
 | [Configuration](docs/configuration.md) | Every `.env` setting |
 | [AI models](docs/llm-providers.md) | The local routing model and the OpenAI knowledge tier |
 | [HTTPS](docs/https.md) | Putting Flowbot behind HTTPS |
