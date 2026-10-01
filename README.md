@@ -78,7 +78,7 @@ Install cosign from https://docs.sigstore.dev/cosign/system_config/installation/
 
 ## Your data and privacy
 
-Flowbot runs entirely on your infrastructure. It makes outbound requests only to OpenAI when you enable the knowledge tier, to an Ollama server if you point it at one, and to web pages you add to the knowledge base. It sends nothing to the Flowbot author.
+Flowbot runs entirely on your infrastructure. It makes outbound requests only to OpenAI when you enable the knowledge tier, to an Ollama server if you point it at one, to Gmail when you set up email, and to web pages you add to the knowledge base. It sends nothing to the Flowbot author.
 
 ## Getting help
 

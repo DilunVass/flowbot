@@ -26,6 +26,17 @@ If a value contains a `$` sign, wrap it in single quotes: `OWNER_PASSWORD='pa$$w
 
 The owner account is created on first start and brought back in line with these values on every start. To reset a forgotten password, change `OWNER_PASSWORD` and run `docker compose up -d`. Changing `OWNER_EMAIL` creates a second owner account; it doesn't rename the first.
 
+## Email
+
+| Setting | Required | Description |
+|---|---|---|
+| `GMAIL_USER` | | Gmail address that invitations and handoff notices are sent from |
+| `APP_PASSWORD` | | An app password for that account, not its normal password |
+
+Both are optional, but without them no email is sent, so the people you invite never get their invitation link. Set these before you invite teammates.
+
+To create an app password, turn on 2-Step Verification for the Google account, then open [App passwords](https://myaccount.google.com/apppasswords). Gmail is the only supported mail service for now.
+
 ## Sign-in tokens
 
 | Setting | Required | Default | Description |
@@ -49,6 +60,8 @@ The owner account is created on first start and brought back in line with these 
 See [llm-providers.md](llm-providers.md).
 
 ## Knowledge tier
+
+OpenAI is the only supported provider for the knowledge tier for now. Support for other providers is planned.
 
 | Setting | Default | Description |
 |---|---|---|

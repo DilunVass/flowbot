@@ -4,7 +4,30 @@ All notable changes to Flowbot are listed here. Versions follow [semantic versio
 
 Before upgrading, read the **Upgrade notes** for every version between yours and the new one.
 
-## [v1.0.0] - 2026-XX-XX
+## [v1.1.0] - 2026-10-01
+
+### Added
+- Email through Gmail: project invitations and handoff notices are now sent by email. Earlier versions created them but sent nothing
+- Edit a chatbot's composed prompt by hand in the Prompt tab. A hand-edited prompt is used as written until you save new choices or rebuild
+- Install guides for macOS and Windows, alongside Linux
+- Backup and restore commands for Windows (PowerShell)
+
+### Changed
+- The docs now state that OpenAI is the only supported provider for the knowledge tier. Support for other providers is planned
+
+### Upgrade notes
+- No changes are required.
+- To turn on email, add `GMAIL_USER` and `APP_PASSWORD` to `.env` and run `docker compose up -d`. See [configuration.md](docs/configuration.md#email). Without them, invited teammates don't receive their invitation link.
+
+## [v1.0.1] - 2026-09-30
+
+### Changed
+- The public site's header and footer link only to pages that exist
+
+### Upgrade notes
+- None.
+
+## [v1.0.0] - 2026-09-29
 
 First public release.
 

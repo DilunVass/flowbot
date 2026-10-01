@@ -51,6 +51,8 @@ OPENAI_API_KEY=sk-...
 
 and run `docker compose up -d`. Then set a chatbot's mode to **hybrid** or **documents only**, and add documents in its knowledge base.
 
+> **OpenAI only, for now.** The knowledge tier currently supports OpenAI as its only provider. Support for other providers is planned for a later release. This doesn't affect the routing model above, which runs locally or on any OpenAI-compatible server.
+
 ### What leaves your server
 
 - When a document is processed, its text goes to OpenAI's embedding model.
